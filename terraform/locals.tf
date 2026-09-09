@@ -1,6 +1,7 @@
 locals {
   stage   = var.environment
   project = var.project
+
   backend_urls = {
     dev     = "https://backend-chapa-tu-venta-development.up.railway.app"
     staging = "https://backend-chapa-tu-venta-staging.up.railway.app"

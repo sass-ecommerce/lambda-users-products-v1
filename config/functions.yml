@@ -1,5 +1,5 @@
 userPostConfirmation:
-  handler: src/post-confirmation/index.postConfirmation
+  handler: src/trigger-post-confirmation/index.postConfirmation
   description: Cognito Post Confirmation trigger — registers the user after email/phone verification
   events:
     - httpApi:
@@ -7,9 +7,52 @@ userPostConfirmation:
         method: post
 
 preToken:
-  handler: src/pre-token/index.preToken
+  handler: src/trigger-pre-token/index.preToken
   description: Cognito Pre Token Generation V2 trigger — adds custom claims to the access token
   events:
     - httpApi:
         path: /pre-token
         method: post
+
+preSignUp:
+  handler: src/trigger-pre-signup/index.preSignUp
+  description: Cognito Pre Sign-up trigger — links a Google sign-in to an existing native account with the same email
+  events:
+    - httpApi:
+        path: /pre-signup
+        method: post
+
+postAuthentication:
+  handler: src/trigger-post-authentication/index.postAuthentication
+  description: Cognito Post Authentication trigger — syncs a new Google user to the backend on their first login
+  events:
+    - httpApi:
+        path: /post-authentication
+        method: post
+
+productsUpload:
+  handler: src/trigger-products-upload/index.productsUpload
+  description: S3 PUT event handler — logs incoming product file uploads from a bucket
+  events:
+    - httpApi:
+        path: /s3-products-upload
+        method: post
+
+eventBridgeProducts:
+  handler: src/event-rule-products/index.eventBridgeProducts
+  description: EventBridge rule trigger — logs incoming product events
+  events:
+    - httpApi:
+        path: /eventbridge-products
+        method: post
+
+dynamodbProducts:
+  handler: src/get-dynamodb-products/index.dynamodbProducts
+  description: HTTP GET handler — reads products from DynamoDB by id or tenantId
+  events:
+    - httpApi:
+        path: /products/{id}
+        method: get
+    - httpApi:
+        path: /products
+        method: get

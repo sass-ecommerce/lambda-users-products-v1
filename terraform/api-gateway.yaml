@@ -1,0 +1,108 @@
+openapi: "3.0.1"
+info:
+  title: "${api_name}"
+  version: "1.0"
+
+x-amazon-apigateway-request-validators:
+  params-only:
+    validateRequestBody: false
+    validateRequestParameters: true
+
+x-amazon-apigateway-gateway-responses:
+  BAD_REQUEST_PARAMETERS:
+    statusCode: 400
+    responseTemplates:
+      application/json: '{"message": "Missing required query parameter"}'
+  RESOURCE_NOT_FOUND:
+    statusCode: 404
+    responseTemplates:
+      application/json: '{"message": "Resource not found"}'
+  DEFAULT_4XX:
+    responseTemplates:
+      application/json: '{"message": "$context.error.messageString"}'
+  DEFAULT_5XX:
+    responseTemplates:
+      application/json: '{"message": "Internal server error"}'
+
+paths:
+  /products:
+    get:
+      summary: Listar productos por tenantId
+      x-amazon-apigateway-request-validator: params-only
+      parameters:
+        - name: tenantId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lista de productos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+        "400":
+          description: Parámetro tenantId requerido
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        uri: "${lambda_invoke_uri}"
+        passthroughBehavior: when_no_match
+
+  /products/{id}:
+    get:
+      summary: Obtener producto por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Producto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "404":
+          description: Producto no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        uri: "${lambda_invoke_uri}"
+        passthroughBehavior: when_no_match
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        tenantId:
+          type: string
+        categoryId:
+          type: string
+        name:
+          type: string
+        basePrice:
+          type: number
+        isActive:
+          type: boolean
+    Error:
+      type: object
+      properties:
+        message:
+          type: string

@@ -113,6 +113,7 @@ jobs:
           echo "environment=$ENV"                                                         >> $GITHUB_OUTPUT
           echo "bucket=ctv-terraform-state-${ENV}"                                       >> $GITHUB_OUTPUT
           echo "key=lambdas/user-post-confirmation/${ENV}/terraform.tfstate"             >> $GITHUB_OUTPUT
+          echo "dynamodb_table=ctv-terraform-state-lock-${ENV}"                          >> $GITHUB_OUTPUT
           echo "module_ref=$MODULE_REF"                                                  >> $GITHUB_OUTPUT
 
       - name: Set module branch
@@ -157,7 +158,8 @@ jobs:
           terraform init \
             -backend-config="bucket=${{ steps.resolve.outputs.bucket }}" \
             -backend-config="key=${{ steps.resolve.outputs.key }}" \
-            -backend-config="region=${{ env.TF_VAR_aws_region }}"
+            -backend-config="region=${{ env.TF_VAR_aws_region }}" \
+            -backend-config="dynamodb_table=${{ steps.resolve.outputs.dynamodb_table }}"
 
       - name: Terraform Validate
         run: terraform validate
@@ -233,6 +235,7 @@ jobs:
           echo "environment=$ENV"                                                         >> $GITHUB_OUTPUT
           echo "bucket=ctv-terraform-state-${ENV}"                                       >> $GITHUB_OUTPUT
           echo "key=lambdas/user-post-confirmation/${ENV}/terraform.tfstate"             >> $GITHUB_OUTPUT
+          echo "dynamodb_table=ctv-terraform-state-lock-${ENV}"                          >> $GITHUB_OUTPUT
           echo "module_ref=$MODULE_REF"                                                  >> $GITHUB_OUTPUT
 
       - name: Set module branch
@@ -277,7 +280,8 @@ jobs:
           terraform init \
             -backend-config="bucket=${{ steps.resolve.outputs.bucket }}" \
             -backend-config="key=${{ steps.resolve.outputs.key }}" \
-            -backend-config="region=${{ env.TF_VAR_aws_region }}"
+            -backend-config="region=${{ env.TF_VAR_aws_region }}" \
+            -backend-config="dynamodb_table=${{ steps.resolve.outputs.dynamodb_table }}"
 
       - name: Terraform Plan
         run: terraform plan -var="environment=${{ steps.resolve.outputs.environment }}" -no-color -out=tfplan
@@ -313,6 +317,7 @@ jobs:
           echo "environment=$ENV"                                                         >> $GITHUB_OUTPUT
           echo "bucket=ctv-terraform-state-${ENV}"                                       >> $GITHUB_OUTPUT
           echo "key=lambdas/user-post-confirmation/${ENV}/terraform.tfstate"             >> $GITHUB_OUTPUT
+          echo "dynamodb_table=ctv-terraform-state-lock-${ENV}"                          >> $GITHUB_OUTPUT
           echo "module_ref=$MODULE_REF"                                                  >> $GITHUB_OUTPUT
 
       - name: Set module branch
@@ -357,7 +362,8 @@ jobs:
           terraform init \
             -backend-config="bucket=${{ steps.resolve.outputs.bucket }}" \
             -backend-config="key=${{ steps.resolve.outputs.key }}" \
-            -backend-config="region=${{ env.TF_VAR_aws_region }}"
+            -backend-config="region=${{ env.TF_VAR_aws_region }}" \
+            -backend-config="dynamodb_table=${{ steps.resolve.outputs.dynamodb_table }}"
 
       - name: Terraform Plan
         id: plan

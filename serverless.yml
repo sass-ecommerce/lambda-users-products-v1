@@ -15,6 +15,8 @@ build:
 
 custom:
   env: ${file(config/dev.yml)}
+  serverless-offline:
+    httpPort: 3005
 
 provider:
   name: aws
