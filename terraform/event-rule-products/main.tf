@@ -10,7 +10,7 @@ locals {
 }
 
 module "lambda" {
-  source = "sass-ecommerce/ctv-infraestructura-terraform-modules-01/modules/lambda"
+  source = "sass-ecommerce/ctv-infraestructura-aws/modules/lambda"
 
   function_name      = local.function_name
   runtime            = "nodejs24.x"
