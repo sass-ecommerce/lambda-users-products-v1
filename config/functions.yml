@@ -70,7 +70,7 @@ dynamodbCollections:
   description: HTTP GET handler — reads collections from DynamoDB by id or tenantId, and lists the products within a collection
   events:
     - httpApi:
-        path: /collections/{collectionId}/products
+        path: /collections/{id}/products
         method: get
     - httpApi:
         path: /collections/{id}

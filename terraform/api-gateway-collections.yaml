@@ -100,12 +100,12 @@ paths:
         uri: "${lambda_invoke_uri}"
         passthroughBehavior: when_no_match
 
-  /collections/{collectionId}/products:
+  /collections/{id}/products:
     get:
       summary: Listar productos de una colección
       x-amazon-apigateway-request-validator: params-only
       parameters:
-        - name: collectionId
+        - name: id
           in: path
           required: true
           schema:
