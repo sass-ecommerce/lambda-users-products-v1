@@ -1,4 +1,4 @@
-import { encodeCursor, ExclusiveStartKey } from '../cursor';
+import { encodeCursor, ExclusiveStartKey } from '../../common';
 import { ProductListResult } from '../get-dynamodb-products.types';
 import { queryProductsByTenant } from '../repositories/products.repository';
 

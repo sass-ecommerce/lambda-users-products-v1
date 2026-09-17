@@ -1,6 +1,5 @@
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
-import { errorResponse, successResponse } from '../common';
-import { decodeCursor } from './cursor';
+import { decodeCursor, errorResponse, ExclusiveStartKey, successResponse } from '../common';
 import { getProductById } from './repositories/products.repository';
 import { listProducts } from './services/list-products.service';
 
@@ -47,9 +46,9 @@ export const dynamodbProducts = async (
     return errorResponse(400, 'Bad Request', `limit must be an integer between 1 and ${MAX_LIMIT}`);
   }
 
-  let exclusiveStartKey;
+  let exclusiveStartKey: ExclusiveStartKey | undefined;
   try {
-    exclusiveStartKey = decodeCursor(event.queryStringParameters?.nextToken);
+    exclusiveStartKey = decodeCursor<ExclusiveStartKey>(event.queryStringParameters?.nextToken);
   } catch {
     return errorResponse(400, 'Bad Request', 'Invalid nextToken');
   }

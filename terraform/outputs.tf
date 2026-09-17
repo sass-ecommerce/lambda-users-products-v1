@@ -34,7 +34,17 @@ output "get_dynamodb_products_lambda_name" {
   value       = module.get_dynamodb_products.lambda_name
 }
 
+output "get_dynamodb_collections_lambda_name" {
+  description = "Nombre de la Lambda get-dynamodb-collections"
+  value       = module.get_dynamodb_collections.lambda_name
+}
+
 output "api_products_url" {
   description = "URL base del API REST de productos"
   value       = "${aws_api_gateway_stage.this.invoke_url}/products"
+}
+
+output "api_collections_url" {
+  description = "URL base del API REST de colecciones"
+  value       = "${aws_api_gateway_stage.collections.invoke_url}/collections"
 }

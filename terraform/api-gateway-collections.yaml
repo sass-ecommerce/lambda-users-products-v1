@@ -1,0 +1,185 @@
+openapi: "3.0.1"
+info:
+  title: "${api_name}"
+  version: "1.0"
+
+x-amazon-apigateway-request-validators:
+  params-only:
+    validateRequestBody: false
+    validateRequestParameters: true
+
+x-amazon-apigateway-gateway-responses:
+  BAD_REQUEST_PARAMETERS:
+    statusCode: 400
+    responseTemplates:
+      application/json: '{"message": "Missing required query parameter"}'
+  RESOURCE_NOT_FOUND:
+    statusCode: 404
+    responseTemplates:
+      application/json: '{"message": "Resource not found"}'
+  DEFAULT_4XX:
+    responseTemplates:
+      application/json: '{"message": "$context.error.messageString"}'
+  DEFAULT_5XX:
+    responseTemplates:
+      application/json: '{"message": "Internal server error"}'
+
+paths:
+  /collections:
+    get:
+      summary: Listar colecciones por tenantId
+      x-amazon-apigateway-request-validator: params-only
+      parameters:
+        - name: tenantId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: nextToken
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lista de colecciones
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Collection"
+        "400":
+          description: Parámetro tenantId requerido
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        uri: "${lambda_invoke_uri}"
+        passthroughBehavior: when_no_match
+
+  /collections/{id}:
+    get:
+      summary: Obtener colección por ID
+      x-amazon-apigateway-request-validator: params-only
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tenantId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Colección encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Collection"
+        "404":
+          description: Colección no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        uri: "${lambda_invoke_uri}"
+        passthroughBehavior: when_no_match
+
+  /collections/{collectionId}/products:
+    get:
+      summary: Listar productos de una colección
+      x-amazon-apigateway-request-validator: params-only
+      parameters:
+        - name: collectionId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tenantId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: nextToken
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lista de productos de la colección
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+        "404":
+          description: Colección no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        uri: "${lambda_invoke_uri}"
+        passthroughBehavior: when_no_match
+
+components:
+  schemas:
+    Collection:
+      type: object
+      properties:
+        collectionId:
+          type: string
+        tenantId:
+          type: string
+        name:
+          type: string
+        coverImageKey:
+          type: string
+        productIds:
+          type: array
+          items:
+            type: string
+    Product:
+      type: object
+      properties:
+        productId:
+          type: string
+        tenantId:
+          type: string
+        categoryId:
+          type: string
+        name:
+          type: string
+        basePrice:
+          type: number
+        isActive:
+          type: boolean
+    Error:
+      type: object
+      properties:
+        message:
+          type: string

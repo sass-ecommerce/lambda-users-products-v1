@@ -5,20 +5,20 @@ import { ExclusiveStartKey } from '../../common';
 const client = new DynamoDBClient({ region: process.env.REGION });
 const dynamo = DynamoDBDocumentClient.from(client);
 
-const TABLE_NAME = process.env.DYNAMODB_TABLE_PRODUCTS!;
+const TABLE_NAME = process.env.DYNAMODB_TABLE_COLLECTIONS!;
 
-export const getProductById = async (tenantId: string, productId: string) => {
+export const getCollectionById = async (tenantId: string, collectionId: string) => {
   const { Item } = await dynamo.send(
     new GetCommand({
       TableName: TABLE_NAME,
-      Key: { tenantId, productId },
+      Key: { tenantId, collectionId },
     }),
   );
 
   return Item;
 };
 
-export const queryProductsByTenant = async (
+export const queryCollectionsByTenant = async (
   tenantId: string,
   limit: number,
   exclusiveStartKey?: ExclusiveStartKey,

@@ -1,3 +1,4 @@
 STAGE: dev
 BACKEND_URL: https://backend-chapa-tu-venta-development.up.railway.app
 DYNAMODB_TABLE_PRODUCTS: ctv-tbl-products-dev
+DYNAMODB_TABLE_COLLECTIONS: ctv-tbl-collections-dev

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-AWS Lambda monorepo hosting four Cognito/S3 triggers, using Serverless Framework v4, TypeScript, and Node.js 24. Each Lambda lives in its own `src/<name>/` directory.
+AWS Lambda monorepo hosting Cognito/S3 triggers, EventBridge rule handlers, and HTTP read APIs for products and collections, using Serverless Framework v4, TypeScript, and Node.js 24. Each Lambda lives in its own `src/<name>/` directory.
 
 ## Commands
 
