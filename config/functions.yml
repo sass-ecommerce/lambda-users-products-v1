@@ -46,6 +46,14 @@ eventBridgeProducts:
         path: /eventbridge-products
         method: post
 
+eventBridgeCollections:
+  handler: src/event-rule-collections/index.eventBridgeCollections
+  description: EventBridge rule trigger — logs incoming collection events
+  events:
+    - httpApi:
+        path: /eventbridge-collections
+        method: post
+
 dynamodbProducts:
   handler: src/get-dynamodb-products/index.dynamodbProducts
   description: HTTP GET handler — reads products from DynamoDB by id or tenantId
