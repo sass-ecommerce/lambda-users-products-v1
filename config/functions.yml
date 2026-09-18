@@ -67,11 +67,8 @@ dynamodbProducts:
 
 dynamodbCollections:
   handler: src/get-dynamodb-collections/index.dynamodbCollections
-  description: HTTP GET handler — reads collections from DynamoDB by id or tenantId, and lists the products within a collection
+  description: HTTP GET handler — reads collections from DynamoDB by id or tenantId
   events:
-    - httpApi:
-        path: /collections/{id}/products
-        method: get
     - httpApi:
         path: /collections/{id}
         method: get

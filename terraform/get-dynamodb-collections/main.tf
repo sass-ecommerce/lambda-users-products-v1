@@ -1,7 +1,6 @@
 locals {
   function_name              = "${var.project}-lambda-get-dynamodb-collections-${var.stage}-01"
   dynamodb_table_collections = "${var.project}-tbl-collections-${var.stage}"
-  dynamodb_table_products    = "${var.project}-tbl-products-${var.stage}"
 }
 
 module "lambda" {
@@ -19,7 +18,6 @@ module "lambda" {
     STAGE                      = var.stage
     REGION                     = var.aws_region
     DYNAMODB_TABLE_COLLECTIONS = local.dynamodb_table_collections
-    DYNAMODB_TABLE_PRODUCTS    = local.dynamodb_table_products
   }
 
   tags = var.tags
