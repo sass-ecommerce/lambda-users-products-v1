@@ -13,7 +13,10 @@ export const listCollections = async (
     exclusiveStartKey,
   );
 
-  const sanitizedItems = items.map(({ productIds: _productIds, ...item }) => item);
+  const sanitizedItems = items.map(({ productIds, ...item }) => ({
+    ...item,
+    productCount: ((productIds as string[]) ?? []).length,
+  }));
 
   return { items: sanitizedItems, nextToken: encodeCursor(lastEvaluatedKey) };
 };
