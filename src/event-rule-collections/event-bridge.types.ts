@@ -11,6 +11,7 @@ export interface CollectionUpdatedDetail {
   tenantId: string;
   name: string;
   coverImageKey: string | null;
+  coverImageUrl: string | null;
   updatedAt: string;
 }
 
