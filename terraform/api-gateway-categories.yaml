@@ -1,0 +1,82 @@
+openapi: "3.0.1"
+info:
+  title: "${api_name}"
+  version: "1.0"
+
+x-amazon-apigateway-request-validators:
+  params-only:
+    validateRequestBody: false
+    validateRequestParameters: true
+
+x-amazon-apigateway-gateway-responses:
+  BAD_REQUEST_PARAMETERS:
+    statusCode: 400
+    responseTemplates:
+      application/json: '{"message": "Missing required query parameter"}'
+  RESOURCE_NOT_FOUND:
+    statusCode: 404
+    responseTemplates:
+      application/json: '{"message": "Resource not found"}'
+  DEFAULT_4XX:
+    responseTemplates:
+      application/json: '{"message": "$context.error.messageString"}'
+  DEFAULT_5XX:
+    responseTemplates:
+      application/json: '{"message": "Internal server error"}'
+
+paths:
+  /categories:
+    get:
+      summary: Listar las categorías con productos activos de un tenant
+      x-amazon-apigateway-request-validator: params-only
+      parameters:
+        - name: tenantId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lista plana de categorías (el árbol se arma con parentId)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+        "400":
+          description: Parámetro tenantId requerido
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        uri: "${lambda_invoke_uri}"
+        passthroughBehavior: when_no_match
+
+components:
+  schemas:
+    Category:
+      type: object
+      properties:
+        categoryId:
+          type: string
+        parentId:
+          type: string
+          nullable: true
+        type:
+          type: string
+          enum: [BASE, CHILDREN]
+        name:
+          type: string
+        slug:
+          type: string
+        productCount:
+          type: integer
+    Error:
+      type: object
+      properties:
+        message:
+          type: string

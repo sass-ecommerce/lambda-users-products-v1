@@ -89,3 +89,23 @@ module "get_dynamodb_collections" {
   aws_region = var.aws_region
   tags       = local.tags
 }
+
+module "event_rule_categories" {
+  source = "./event-rule-categories"
+
+  project    = local.project
+  role_arn   = data.aws_ssm_parameter.lambda_role_arn.value
+  stage      = local.stage
+  aws_region = var.aws_region
+  tags       = local.tags
+}
+
+module "get_dynamodb_categories" {
+  source = "./get-dynamodb-categories"
+
+  project    = local.project
+  role_arn   = data.aws_ssm_parameter.lambda_role_arn.value
+  stage      = local.stage
+  aws_region = var.aws_region
+  tags       = local.tags
+}

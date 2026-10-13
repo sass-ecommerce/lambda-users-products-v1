@@ -3,10 +3,11 @@ data "aws_ssm_parameter" "rule_products_arn" {
 }
 
 locals {
-  function_name           = "${var.project}-lambda-event-rule-products-${var.stage}-01"
-  rule_name               = "${var.project}-rule-products-${var.stage}"
-  event_bus_name          = "${var.project}-event-bus-${var.stage}"
-  dynamodb_table_products = "${var.project}-tbl-products-${var.stage}"
+  function_name             = "${var.project}-lambda-event-rule-products-${var.stage}-01"
+  rule_name                 = "${var.project}-rule-products-${var.stage}"
+  event_bus_name            = "${var.project}-event-bus-${var.stage}"
+  dynamodb_table_products   = "${var.project}-tbl-products-${var.stage}"
+  dynamodb_table_categories = "${var.project}-tbl-categories-${var.stage}"
 }
 
 module "lambda" {
@@ -21,9 +22,10 @@ module "lambda" {
   log_retention_days = 7
 
   environment_variables = {
-    STAGE                   = var.stage
-    REGION                  = var.aws_region
-    DYNAMODB_TABLE_PRODUCTS = local.dynamodb_table_products
+    STAGE                     = var.stage
+    REGION                    = var.aws_region
+    DYNAMODB_TABLE_PRODUCTS   = local.dynamodb_table_products
+    DYNAMODB_TABLE_CATEGORIES = local.dynamodb_table_categories
   }
 
   permissions = {

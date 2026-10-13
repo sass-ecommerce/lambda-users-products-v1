@@ -48,3 +48,18 @@ output "api_collections_url" {
   description = "URL base del API REST de colecciones"
   value       = "${aws_api_gateway_stage.collections.invoke_url}/collections"
 }
+
+output "event_rule_categories_lambda_name" {
+  description = "Nombre de la Lambda event-rule-categories"
+  value       = module.event_rule_categories.lambda_name
+}
+
+output "get_dynamodb_categories_lambda_name" {
+  description = "Nombre de la Lambda get-dynamodb-categories"
+  value       = module.get_dynamodb_categories.lambda_name
+}
+
+output "api_categories_url" {
+  description = "URL base del API REST de categorías"
+  value       = "${aws_api_gateway_stage.categories.invoke_url}/categories"
+}

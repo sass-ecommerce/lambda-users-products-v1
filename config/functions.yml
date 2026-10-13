@@ -75,3 +75,19 @@ dynamodbCollections:
     - httpApi:
         path: /collections
         method: get
+
+eventBridgeCategories:
+  handler: src/event-rule-categories/index.eventBridgeCategories
+  description: EventBridge rule trigger — replicates category events into DynamoDB
+  events:
+    - httpApi:
+        path: /eventbridge-categories
+        method: post
+
+dynamodbCategories:
+  handler: src/get-dynamodb-categories/index.dynamodbCategories
+  description: HTTP GET handler — lists a tenant's categories with active products from DynamoDB
+  events:
+    - httpApi:
+        path: /categories
+        method: get

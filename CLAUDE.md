@@ -8,35 +8,7 @@ AWS Lambda monorepo hosting Cognito/S3 triggers, EventBridge rule handlers, and 
 
 ## Commands
 
-```bash
-# Install dependencies
-npm install
-
-# Local development (serverless-offline)
-npm run dev   # http://localhost:3000
-
-# Type check
-npm run typecheck
-
-# Lint / format
-npm run lint
-npm run lint:fix
-npm run format
-npm run format:check
-
-# Tests
-npm test
-npm run test:watch
-
-# Build for Terraform deploy (outputs to .build/<name>/)
-npm run build
-
-# Package each .build/<name>/ into <name>.zip for Terraform upload
-npm run package
-
-# Deploy via Serverless Framework (not the primary deploy path)
-serverless deploy --stage dev   # or staging / prod
-```
+Standard scripts are in `package.json`. Production deploy goes through Terraform, not `serverless deploy`: `npm run build` (bundles to `.build/<name>/`) then `npm run package` (zips each into `<name>.zip` for Terraform upload).
 
 ## Architecture
 

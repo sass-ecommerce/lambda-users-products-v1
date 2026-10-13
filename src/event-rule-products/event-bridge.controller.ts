@@ -1,3 +1,4 @@
+import { recalculateCategoryCounts } from '../common/category-counts';
 import { ProductEvent } from './event-bridge.types';
 import { createProduct } from './services/product-created.service';
 import { removeProduct } from './services/product-deleted.service';
@@ -10,15 +11,19 @@ export const eventBridgeProducts = async (event: ProductEvent): Promise<void> =>
   switch (event['detail-type']) {
     case 'product.created':
       await createProduct(event.detail);
+      await recalculateCategoryCounts(event.detail.tenantId);
       break;
     case 'product.image.added':
       await addProductImages(event.detail);
       break;
     case 'product.deleted':
       await removeProduct(event.detail);
+      await recalculateCategoryCounts(event.detail.tenantId);
       break;
     case 'product.updated':
+      // May change the category or isActive, both of which affect the counts.
       await updateProductDetails(event.detail);
+      await recalculateCategoryCounts(event.detail.tenantId);
       break;
   }
 };
