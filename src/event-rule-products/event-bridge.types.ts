@@ -19,6 +19,7 @@ export interface ProductCreatedDetail {
   categoryId: string;
   category: CategoryAncestor[];
   name: string;
+  description: string | null;
   basePrice: number;
   isActive: boolean;
   attributes: ProductAttribute[];
