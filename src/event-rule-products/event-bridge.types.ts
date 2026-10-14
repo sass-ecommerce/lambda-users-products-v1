@@ -23,6 +23,8 @@ export interface ProductCreatedDetail {
   basePrice: number;
   isActive: boolean;
   attributes: ProductAttribute[];
+  // Absent from events published by backends older than the read-model guard.
+  createdAt?: string;
 }
 
 export interface ProductImage {
@@ -39,28 +41,21 @@ export interface ProductImageDetail {
   images: ProductImage[];
 }
 
-// Full, ordered list of the product's active images (replaces, not appends).
-export interface ProductImagesSyncedDetail {
-  tenantId: string;
-  productId: string;
-  syncedAt: string;
-  images: ProductImage[];
-}
-
 export interface ProductDeletedDetail {
   tenantId: string;
   productId: string;
 }
 
-// `category` is only sent when the product changed category.
-export interface ProductUpdatedDetail extends Omit<ProductCreatedDetail, 'category'> {
+// A full snapshot of the product; `category` is only sent when it changed.
+// `images` (ordered, first = cover) is absent from older backends' events.
+export interface ProductUpdatedDetail extends Omit<ProductCreatedDetail, 'category' | 'createdAt'> {
   category?: CategoryAncestor[];
+  images?: ProductImage[];
   updatedAt: string;
 }
 
 export type ProductEvent =
   | EventBridgeEvent<'product.created', ProductCreatedDetail>
   | EventBridgeEvent<'product.image.added', ProductImageDetail>
-  | EventBridgeEvent<'product.images.synced', ProductImagesSyncedDetail>
   | EventBridgeEvent<'product.deleted', ProductDeletedDetail>
   | EventBridgeEvent<'product.updated', ProductUpdatedDetail>;

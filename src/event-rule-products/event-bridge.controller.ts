@@ -3,7 +3,6 @@ import { ProductEvent } from './event-bridge.types';
 import { createProduct } from './services/product-created.service';
 import { removeProduct } from './services/product-deleted.service';
 import { addProductImages } from './services/product-image-added.service';
-import { syncProductImages } from './services/product-images-synced.service';
 import { updateProductDetails } from './services/product-updated.service';
 
 export const eventBridgeProducts = async (event: ProductEvent): Promise<void> => {
@@ -14,12 +13,9 @@ export const eventBridgeProducts = async (event: ProductEvent): Promise<void> =>
       await createProduct(event.detail);
       await recalculateCategoryCounts(event.detail.tenantId);
       break;
-    // Legacy: the backend now publishes product.images.synced instead.
+    // Legacy: the backend now sends the images in product.updated.
     case 'product.image.added':
       await addProductImages(event.detail);
-      break;
-    case 'product.images.synced':
-      await syncProductImages(event.detail);
       break;
     case 'product.deleted':
       await removeProduct(event.detail);
