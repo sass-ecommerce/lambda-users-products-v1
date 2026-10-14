@@ -39,15 +39,28 @@ export interface ProductImageDetail {
   images: ProductImage[];
 }
 
+// Full, ordered list of the product's active images (replaces, not appends).
+export interface ProductImagesSyncedDetail {
+  tenantId: string;
+  productId: string;
+  syncedAt: string;
+  images: ProductImage[];
+}
+
 export interface ProductDeletedDetail {
   tenantId: string;
   productId: string;
 }
 
-export type ProductUpdatedDetail = ProductCreatedDetail;
+// `category` is only sent when the product changed category.
+export interface ProductUpdatedDetail extends Omit<ProductCreatedDetail, 'category'> {
+  category?: CategoryAncestor[];
+  updatedAt: string;
+}
 
 export type ProductEvent =
   | EventBridgeEvent<'product.created', ProductCreatedDetail>
   | EventBridgeEvent<'product.image.added', ProductImageDetail>
+  | EventBridgeEvent<'product.images.synced', ProductImagesSyncedDetail>
   | EventBridgeEvent<'product.deleted', ProductDeletedDetail>
   | EventBridgeEvent<'product.updated', ProductUpdatedDetail>;

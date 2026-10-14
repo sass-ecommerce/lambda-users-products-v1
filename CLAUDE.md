@@ -19,11 +19,10 @@ Four Lambda functions, each isolated under its own `src/<name>/` directory:
 | `pre-signup`         | Cognito Pre Sign-up             | Links a Google sign-in to an existing native (email/password) user with the same email via `AdminLinkProviderForUser`; rejects native sign-up when the email already belongs to a Google identity |
 | `post-confirmation`  | Cognito Post Confirmation       | Forwards new user data to the backend at `POST /api/users/cognito-trigger`                                                                                                                        |
 | `pre-token`          | Cognito Pre Token Generation V2 | Injects `custom:id` and `custom:tenantId` as `id`/`tenantId` claims into the access token                                                                                                         |
-| `s3-products-upload` | S3 PUT event                    | Notifies the backend at `POST /api/products/images` when a product image is uploaded; S3 key format: `{tenantId}/products/{productId}/{filename}`                                                 |
 
 Each function follows the same two-file pattern:
 
-- `src/<name>/<name>.controller.ts` — Lambda handler entry; receives the AWS event type and delegates to the service (for post-confirmation) or handles logic directly (for pre-token and s3-products-upload)
+- `src/<name>/<name>.controller.ts` — Lambda handler entry; receives the AWS event type and delegates to the service (for post-confirmation) or handles logic directly (for pre-token)
 - `src/<name>/index.ts` — re-exports the handler; this is what `config/functions.yml` and `esbuild.config.js` reference
 
 Other key files:
@@ -37,7 +36,7 @@ Other key files:
 
 The `terraform/` directory manages the AWS resources. The primary deploy path for production is Terraform (not `serverless deploy`):
 
-- **`terraform/main.tf`** — root module; instantiates child modules: `pre-signup`, `post-confirmation`, `pre-token`, `s3-products-upload`
+- **`terraform/main.tf`** — root module; instantiates child modules: `pre-signup`, `post-confirmation`, `pre-token`
 - **`terraform/cognito.tf`** — imports the existing Cognito user pool (via `data.aws_cognito_user_pools`) and wires the three Cognito Lambda triggers; uses `lifecycle.ignore_changes` to avoid conflicts with console-managed pool settings
 - **`terraform/locals.tf`** — maps stage names (`dev`/`staging`/`prod`) to backend Railway URLs
 - **`terraform/<module>/`** — each child module defines the Lambda function resource, IAM permission for Cognito/S3 to invoke it, and any event source mappings

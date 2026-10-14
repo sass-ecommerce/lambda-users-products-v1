@@ -30,14 +30,6 @@ postAuthentication:
         path: /post-authentication
         method: post
 
-productsUpload:
-  handler: src/trigger-products-upload/index.productsUpload
-  description: S3 PUT event handler — logs incoming product file uploads from a bucket
-  events:
-    - httpApi:
-        path: /s3-products-upload
-        method: post
-
 eventBridgeProducts:
   handler: src/event-rule-products/index.eventBridgeProducts
   description: EventBridge rule trigger — logs incoming product events

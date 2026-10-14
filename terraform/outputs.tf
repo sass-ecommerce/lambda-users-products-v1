@@ -13,11 +13,6 @@ output "trigger_pre_signup_lambda_name" {
   value       = module.trigger_pre_signup.lambda_name
 }
 
-output "trigger_products_upload_lambda_name" {
-  description = "Nombre de la Lambda trigger-products-upload"
-  value       = module.trigger_products_upload.lambda_name
-}
-
 output "event_rule_products_lambda_name" {
   description = "Nombre de la Lambda event-rule-products"
   value       = module.event_rule_products.lambda_name
